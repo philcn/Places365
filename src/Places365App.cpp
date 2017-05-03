@@ -99,7 +99,7 @@ void Places365App::classify( SurfaceRef image )
 	mCurrentResults.clear();
 	
 	for( int i = 0; i < result.size(); ++i ) {
-    	mCurrentResults.push_back( make_pair( mLabels[result[i].first], result[i].second ) );
+		mCurrentResults.push_back( make_pair( mLabels[result[i].first], result[i].second ) );
 	}
 }
 
@@ -112,10 +112,10 @@ void Places365App::fileDrop( FileDropEvent event )
 	mTestImageTexture.reset();
 	
 	if( extension == ".png" || extension == ".jpg" ) {
-    	mTestImage = Surface::create( loadImage( loadFile( event.getFile( 0 ) ) ) );
-    	mTestImageTexture = gl::Texture::create( *mTestImage );
-    	
-    	classify( mTestImage );
+		mTestImage = Surface::create( loadImage( loadFile( event.getFile( 0 ) ) ) );
+		mTestImageTexture = gl::Texture::create( *mTestImage );
+		
+		classify( mTestImage );
 	}
 	else if( extension == ".mov" || extension == ".mp4" ) {
 		mTestMovie = qtime::MovieSurface::create( event.getFile( 0 ) );
@@ -130,11 +130,11 @@ void Places365App::update()
 		mTestImage = mTestMovie->getSurface();
 		
 		if( mTestImage ) {
-        	mTestImageTexture = gl::Texture::create( *mTestImage );
-        		
-    		if( getElapsedFrames() % 30 == 0 ) {
-            	classify( mTestImage );
-    		}
+			mTestImageTexture = gl::Texture::create( *mTestImage );
+			
+			if( getElapsedFrames() % 30 == 0 ) {
+				classify( mTestImage );
+			}
 		}
 	}
 }
@@ -146,19 +146,19 @@ void Places365App::draw()
 	gl::setMatricesWindow( getWindowSize() );
 	
 	if( mTestImageTexture ) {
-    	auto drawArea = Area::proportionalFit( mTestImage->getBounds(), Area( vec2( 0 ), getWindowSize() ), true, true );
-    	gl::draw( mTestImageTexture, drawArea );
+		auto drawArea = Area::proportionalFit( mTestImage->getBounds(), Area( vec2( 0 ), getWindowSize() ), true, true );
+		gl::draw( mTestImageTexture, drawArea );
 	}
 	
 	ui::ScopedWindow window( "Prediction" );
 	if( mCurrentResults.size() >= 5 ) {
 		for( int i = 0; i < 5; ++i ) {
-        	ui::Text( "Prediction %d: %s: %03f", i + 1, mCurrentResults[i].first.c_str(), mCurrentResults[i].second );
+			ui::Text( "Prediction %d: %s: %03f", i + 1, mCurrentResults[i].first.c_str(), mCurrentResults[i].second );
 		}
 		
 		static gl::TextureFontRef texFont = gl::TextureFont::create( ci::Font( "Arial", 96 ) );
 		gl::ScopedGlslProg glsl_( gl::getStockShader( gl::ShaderDef().color().texture() ) );
-    	gl::ScopedColor col_( 1.0, 1.0, 1.0, 0.3 );
+		gl::ScopedColor col_( 1.0, 1.0, 1.0, 0.3 );
 		
 		auto size = texFont->measureString( mCurrentResults[0].first );
 		texFont->drawString( mCurrentResults[0].first, vec2( getWindowSize() ) / 2.0f - size / 2.0f );
